@@ -1,11 +1,14 @@
+const https = require("https");
+
 class Kiroku {
-  #key = null;
+  _key = null;
 
   /**
    * @param {string} key - The API key for the Kiroku service
+   * @param {boolean} silentErrors - Whether to log errors
    */
-  constructor(key) {
-    this.key = key;
+  constructor(key, silentErrors = true) {
+    this._key = key;
   }
 
   /**
@@ -14,12 +17,12 @@ class Kiroku {
    * @param {Object} context
    * @returns {Promise<void>}
    */
-  async #log() {
-    await fetch("https://kiroku.app/api/v1/log", {
+  async _log(level, message, context) {
+    const request = await https.request("https://kiroku.app/api/v1/log", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": this.key,
+        "Authorization": this._key,
         "Accept": "application/json",
       },
       body: JSON.stringify({
@@ -27,7 +30,6 @@ class Kiroku {
         message,
         context,
       }),
-
     });
   }
 
@@ -37,7 +39,7 @@ class Kiroku {
    * @returns {Promise<void>}
    */
   async debug(message, context = {}) {
-    this.log("debug", message, context);
+    await this._log("debug", message, context);
   }
 
   /**
@@ -46,7 +48,7 @@ class Kiroku {
    * @returns {Promise<void>}
    */
   async info(message, context = {}) {
-    this.log("info", message, context);
+    await this._log("info", message, context);
   }
 
   /**
@@ -55,7 +57,7 @@ class Kiroku {
    * @returns {Promise<void>}
    */
   async warn(message, context = {}) {
-    this.log("warning", message, context);
+    await this._log("warning", message, context);
   }
 
   /**
@@ -64,8 +66,8 @@ class Kiroku {
    * @returns {Promise<void>}
    */
   async error(message, context = {}) {
-    this.log("error", message, context);
+    await this._log("error", message, context);
   }
 }
 
-export default Kiroku;
+module.exports = Kiroku;
