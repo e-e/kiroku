@@ -2,6 +2,7 @@ const https = require("https");
 
 class Kiroku {
   _key = null;
+  _silentErrors = true;
 
   /**
    * @param {string} key - The API key for the Kiroku service
@@ -9,6 +10,7 @@ class Kiroku {
    */
   constructor(key, silentErrors = true) {
     this._key = key;
+    this._silentErrors = silentErrors;
   }
 
   /**
@@ -18,18 +20,44 @@ class Kiroku {
    * @returns {Promise<void>}
    */
   async _log(level, message, context) {
-    const request = await https.request("https://kiroku.app/api/v1/log", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": this._key,
-        "Accept": "application/json",
-      },
-      body: JSON.stringify({
+    return new Promise((resolve, reject) => {
+      const request = https.request( {
+        hostname: "kiroku.eric.wtf",
+        path: "/api/v1/log",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": this._key,
+          "Accept": "application/json",
+        },
+      }, (response) => {
+        if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+          if (!this._silentErrors) {
+            console.error(`Kiroku responded with ${response.statusCode} ${response.statusMessage}`);
+            reject(response);
+          }
+        }
+
+        let responseData = "";
+        response.on("data", (data) => {
+          responseData += data;
+        });
+        response.on("end", () => {
+          resolve(responseData);
+        })
+      });
+      request.on("error", (error) => {
+        if (!this._silentErrors) {
+          console.error(error);
+          reject(error);
+        }
+      })
+      request.write(JSON.stringify({
         level,
         message,
         context,
-      }),
+      }));
+      request.end();
     });
   }
 
