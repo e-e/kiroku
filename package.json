@@ -1,0 +1,19 @@
+{
+  "name": "@e-e/kiroku",
+  "version": "1.0.1",
+  "description": "Client for https://kiroku.eric.wtf",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/e-e/kiroku.git"
+  },
+  "author": "Eric Ellingson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/e-e/kiroku/issues"
+  },
+  "homepage": "https://github.com/e-e/kiroku#readme"
+}
