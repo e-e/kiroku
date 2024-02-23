@@ -17,11 +17,11 @@ class Kiroku {
    * @param {string} level
    * @param {string} message
    * @param {object} context
-   * @param {object | null} request
-   * @param {object | null} response
+   * @param {object | null} requestData
+   * @param {object | null} responseData
    * @returns {Promise<void>}
    */
-  async _log(level, message, context, request = null, response = null) {
+  async _log(level, message, context, requestData = null, responseData = null) {
     return new Promise((resolve, reject) => {
       const request = https.request( {
         hostname: "kiroku.eric.wtf",
@@ -58,8 +58,8 @@ class Kiroku {
         level,
         message,
         context,
-        request,
-        response,
+        request: requestData,
+        response: responseData,
       }));
       request.end();
     });
