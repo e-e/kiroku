@@ -16,9 +16,9 @@ class Kiroku {
   /**
    * @param {string} level
    * @param {string} message
-   * @param {Object} context
-   * @param {Object | null} request
-   * @param {Object | null} response
+   * @param {object} context
+   * @param {object | null} request
+   * @param {object | null} response
    * @returns {Promise<void>}
    */
   async _log(level, message, context, request = null, response = null) {
@@ -68,37 +68,45 @@ class Kiroku {
   /**
    * @param {string} message
    * @param {object} context
+   * @param {object | null} request
+   * @param {object | null} response
    * @returns {Promise<void>}
    */
-  async debug(message, context = {}) {
-    await this._log("debug", message, context);
+  async debug(message, context = {}, request = null, response = null) {
+    await this._log("debug", message, context, request, response);
   }
 
   /**
    * @param message
    * @param context
+   * @param {object | null} request
+   * @param {object | null} response
    * @returns {Promise<void>}
    */
-  async info(message, context = {}) {
-    await this._log("info", message, context);
+  async info(message, context = {}, request = null, response = null) {
+    await this._log("info", message, context, request, response);
   }
 
   /**
    * @param message
    * @param context
+   * @param {object | null} request
+   * @param {object | null} response
    * @returns {Promise<void>}
    */
-  async warn(message, context = {}) {
-    await this._log("warning", message, context);
+  async warn(message, context = {}, request = null, response = null) {
+    await this._log("warning", message, context, request, response);
   }
 
   /**
    * @param message
    * @param context
+   * @param {object | null} request
+   * @param {object | null} response
    * @returns {Promise<void>}
    */
-  async error(message, context = {}) {
-    await this._log("error", message, context);
+  async error(message, context = {}, request = null, response = null) {
+    await this._log("error", message, context, request, response);
   }
 }
 
