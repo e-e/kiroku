@@ -1,4 +1,5 @@
 const https = require("https");
+const http = require("http");
 
 class Kiroku {
   _key = null;
@@ -7,10 +8,12 @@ class Kiroku {
   /**
    * @param {string} key - The API key for the Kiroku service
    * @param {boolean} silentErrors - Whether to log errors
+   * @param {string} host - The host to send logs to
    */
-  constructor(key, silentErrors = true) {
+  constructor(key, silentErrors = true, host = "https://kiroku.eric.wtf") {
     this._key = key;
     this._silentErrors = silentErrors;
+    this._host = host;
   }
 
   /**
@@ -22,9 +25,12 @@ class Kiroku {
    * @returns {Promise<void>}
    */
   async _log(level, message, context, requestData = null, responseData = null) {
+    const url = new URL(this._host);
+    const client = url.protocol === "https:" ? https : http;
+
     return new Promise((resolve, reject) => {
-      const request = https.request( {
-        hostname: "kiroku.eric.wtf",
+      const request = client.request( {
+        hostname: url.host,
         path: "/api/v1/log",
         method: "POST",
         headers: {
