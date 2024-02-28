@@ -1,6 +1,8 @@
 const https = require("https");
 const http = require("http");
 
+const HOST = "https://kiroku.eric.wtf";
+
 class Kiroku {
   _key = null;
   _silentErrors = true;
@@ -10,9 +12,24 @@ class Kiroku {
    * @param {boolean} silentErrors - Whether to log errors
    * @param {string} host - The host to send logs to
    */
-  constructor(key, silentErrors = true, host = "https://kiroku.eric.wtf") {
+  constructor(key, silentErrors = true, host = HOST) {
     this._key = key;
     this._silentErrors = silentErrors;
+
+    if (typeof host !== "string") {
+      host = HOST;
+    }
+
+    try {
+      const url = new URL(host);
+      host = `${url.protocol}//${url.host}`;
+    } catch (err) {
+      if (!this._silentErrors) {
+        console.error(err);
+      }
+      host = HOST;
+    }
+
     this._host = host;
   }
 
